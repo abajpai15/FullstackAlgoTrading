@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <h1><a href="/"> Assets </a> <i class="angle double right icon"></i>{{asset.name}}</h1>
+
+    <h2>Assets</h2>
+    <table class="ui striped table">
+        <thead>
+        <tr>
+            <th>Symbol</th>
+            <th>Name</th>
+        </tr>
+        </thead>
+        <tbody>
+            {%for asset in assets %}
+            <tr>
+                <td>{{asset.symbol}}</td>
+                <td>{{asset.name}}</td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

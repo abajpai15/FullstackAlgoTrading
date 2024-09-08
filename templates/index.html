@@ -1,0 +1,41 @@
+<html>
+    <head>
+        <title>TITLE</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
+    </head>
+    <body>
+        <div class = "ui container">
+            <h1> Asset List</h1>
+
+            <form method="get">
+                <select name="filter">
+                    <option value="">All Assets</option>
+                    <option value="new_intraday_highs">New Intraday Highs</option>
+                    <option value="new_closing_highs">New Closing Highs</option>
+                    <option value="new_intraday_lows">New Intraday Lows</option>
+                    <option value="new_closing_lows">New Closing Lows</option>
+                </select>
+                <input type="submit" />
+            </form>
+
+            <table class="ui striped table">
+                <thead>
+                  <tr>
+                    <th>Symbol</th>
+                    <th>Asset Name</th>
+                    <th class="right aligned">View</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {%for asset in assets %}
+                    <tr>
+                        <td>{{asset.symbol}}</td>
+                        <td><a href= "/asset/{{asset.symbol}}">{{asset.name}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+              </table>
+        </div>
+    </body>
+</html>
