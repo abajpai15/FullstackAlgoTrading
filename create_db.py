@@ -40,7 +40,6 @@ cursor.execute("""
     CREATE TABLE IF NOT EXISTS asset_strategy (
         asset_id INTEGER,
         strategy_id INTEGER NOT NULL,
-        open NOT NULL,
         FOREIGN KEY (asset_id)  REFERENCES assets (id)
         FOREIGN KEY (strategy_id)  REFERENCES trading_strategies (id)     
     )

@@ -16,6 +16,8 @@ def index(request: Request):
     connection.row_factory = sqlite3.Row
 
     cursor = connection.cursor()
+    date_param = (datetime.today() - timedelta(hours=10)).strftime('%Y-%m-%d')
+    date = (datetime.today() - timedelta(days=13)).strftime('%Y-%m-%d')
 
     if asset_filter == 'new_closing_highs':
         cursor.execute("""
@@ -25,7 +27,7 @@ def index(request: Request):
                 ap.asset_id = a.id GROUP BY asset_id ORDER BY symbol
             ) AS subquery
             where date = ? 
-        """, ((datetime.today() - timedelta(hours=10)).strftime('%Y-%m-%d')))
+        """, ('2024-06-06',))
     else:
         cursor.execute("""
             SELECT symbol, name FROM assets ORDER BY symbol LIMIT 50   
@@ -73,3 +75,29 @@ def apply_strategy(strategy_id: int = Form(...), asset_id: int = Form(...)):
 
     connection.commit()
     return RedirectResponse(url=f"/strategy/{strategy_id}", status_code = 303)
+
+@app.get("/strategy/{strategy_id}")
+def strategy(request: Request, strategy_id):
+    connection = sqlite3.connect(config.DB_FILE)
+    connection.row_factory = sqlite3.Row
+
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT id, name
+        FROM trading_strategies
+        WHERE id = ?
+    """, (strategy_id))
+
+    strategy = cursor.fetchone()
+
+    cursor.execute("""
+        SELECT symbol, name
+        FROM assets ts JOIN asset_strategy ast ON ts.id = ast.asset_id
+        WHERE strategy_id = ?
+    """, (strategy_id))
+
+    assets = cursor.fetchall()
+    print(assets)
+
+    return templates.TemplateResponse("strategy.html", {"request": request, "assets": assets, "strategies": strategy })
